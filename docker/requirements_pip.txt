@@ -1,0 +1,3 @@
+cpplint
+colorama
+pre-commit

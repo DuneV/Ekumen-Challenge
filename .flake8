@@ -1,0 +1,12 @@
+[flake8]
+# D100: Missing docstring in public module.
+# D101: Missing docstring in public class.
+# D102: Missing docstring in public method.
+# D103: Missing docstring in public function.
+# D104: Missing docstring in public package.
+# D107: Missing docstring in __init__
+extend-ignore = D100,D101,D102,D103,D104,D107
+import-order-style = google
+max-line-length = 99
+show-source = true
+statistics = true

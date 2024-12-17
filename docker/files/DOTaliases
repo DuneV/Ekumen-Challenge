@@ -1,0 +1,13 @@
+alias go_home="cd /home/developer/ws"
+alias challenge_run_all_tests="go_home; mkdir -p .build && pushd .build && cmake .. && make && ctest --output-on-failure; popd"
+
+# cpp test targets get built and then run
+alias challenge_run_1="go_home; mkdir -p .build && pushd .build && cmake .. && make 1_cpp_creating_a_stack && ctest -R 1_cpp_creating_a_stack --output-on-failure; popd"
+alias challenge_run_3="go_home; mkdir -p .build && pushd .build && cmake .. && make 3_cpp_understanding_lambdas && ctest -R 3_cpp_understanding_lambdas --output-on-failure; popd"
+alias challenge_run_5="go_home; mkdir -p .build && pushd .build && cmake .. && make 5_cpp_algorithmic_life && ctest -R 5_cpp_algorithmic_life --output-on-failure; popd"
+
+# python tests do not have build targets
+alias challenge_run_2="go_home; mkdir -p .build && pushd .build && cmake .. && ctest -R 2_python_rle_encoder --output-on-failure; popd"
+alias challenge_run_4="go_home; mkdir -p .build && pushd .build && cmake .. && ctest -R 4_python_flood_fill --output-on-failure; popd"
+
+alias challenge_clean_build="go_home; rm -rf .build"

@@ -70,12 +70,14 @@ public:
     }
 
     // Check if the stack is empty
+
     bool empty() const {
         return elements_.empty();
     }
 
 private:
   // Container to store stack elements
+  
     std::vector<T> elements_; 
 };
 

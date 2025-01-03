@@ -17,7 +17,68 @@
 /// BEGIN EDIT ------------------------------------------------------
 
 //
-// your Stack<T> class here
+
+template <typename T>
+
+class Stack {
+
+public:
+
+    // Default builder to define an empty stack
+
+    Stack() = default;
+    
+    // Push an element at the end of the container elements_
+    // Which is a vector
+
+    void push(const T& value) {
+        elements_.push_back(value);
+    }
+
+    // Push an element directly in case of not belong to a var
+    
+    void push(T&& value) {
+        elements_.push_back(std::move(value));
+    }
+
+    // Remove the top element from the stack
+    
+    void pop() {
+        if (elements_.empty()) {
+            throw std::out_of_range("Stack is empty");
+        }
+        // Removes last element 
+        elements_.pop_back();
+    }
+
+    // Access the top element of the stack
+
+    T& top() {
+        if (elements_.empty()) {
+            throw std::out_of_range("Stack is empty");
+        }
+        return elements_.back();
+    }
+
+    // Access the top element of the stack (const)
+
+    const T& top() const {
+        if (elements_.empty()) {
+            throw std::out_of_range("Stack is empty");
+        }
+        return elements_.back();
+    }
+
+    // Check if the stack is empty
+    bool empty() const {
+        return elements_.empty();
+    }
+
+private:
+  // Container to store stack elements
+    std::vector<T> elements_; 
+};
+
 //
 
 /// END EDIT --------------------------------------------------------
@@ -41,7 +102,7 @@ template <> struct Values<char> {
 
 typedef ::testing::Types<std::string, int, char> Implementations;
 
-template <typename T> class WhatAreYouMadeOf : public testing::Test {};
+template <typename T> class WhatAreYouMadeOf : public testing::Test {}; // Nice name :)
 
 TYPED_TEST_SUITE(WhatAreYouMadeOf, Implementations);
 

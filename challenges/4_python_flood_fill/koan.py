@@ -9,6 +9,7 @@
 
 import unittest
 
+
 # BEGIN EDIT ------------------------------------------------------
 
 
@@ -28,23 +29,48 @@ class ConnectedRegionPainter:
 
     # method to get the color of a pixel
     def get_pixel(self, x, y):
-        return None
+        if not self.is_valid_pixel(x,y):
+            raise ValueError("Out of range")
+        return self.image[y][x]
 
     # method to set the color of a pixel
     def set_pixel(self, x, y, color):
-        pass
+        if not self.is_valid_pixel(x,y):
+            raise ValueError("Out of range")
+        self.image[y][x] = color
 
     # method to get the image back
     def get_image(self):
-        return None
+        return self.image
 
     # method to determine if the pixels are within the image
     def is_valid_pixel(self, x, y):
-        return False
+        return 0 <= x < self.width and 0 <= y < self.height
 
-    # method to flood fill a region with a new color
+    # method to flood fill a region with a new color star mode
     def flood_fill(self, x, y, new_color):
-        pass
+        if not self.is_valid_pixel(x, y):
+            raise ValueError("Out of range")
+        target = self.get_pixel(x,y)
+        if target == new_color:
+            return
+        self.star_color(x, y, target, new_color)
+
+    # aux function in case of changing the objective
+    def star_color(self, x, y, target, new_color):
+        if not self.is_valid_pixel(x,y) or self.get_pixel(x,y) != target:
+            return
+        self.set_pixel(x, y, new_color)
+        directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+        for dx, dy in directions:
+            new_x, new_y = x, y
+            while True: 
+                new_x += dx
+                new_y += dy
+                if not self.is_valid_pixel(new_x, new_y) or self.get_pixel(new_x, new_y) != target:
+                    break
+                self.star_color(new_x, new_y, target, new_color)
+                self.set_pixel(new_x, new_y, new_color)
 
 
 # END EDIT --------------------------------------------------------

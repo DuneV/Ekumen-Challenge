@@ -20,39 +20,61 @@
 
 template <typename T>
 
+/**
+ * @brief A generic stack implementation using a vector as the underlying container.
+ *
+ * This class provides standard stack operations such as push, pop, and access
+ * to the top element. The stack follows a last-in-first-out (LIFO) order.
+ *
+ * @tparam T The type of elements stored in the stack.
+ */
 class Stack {
 
 public:
-
-    // Default builder to define an empty stack
-
+    /**
+     * @brief Default builder to define an empty stack.
+     */
     Stack() = default;
-    
-    // Push an element at the end of the container elements_
-    // Which is a vector
 
+    /**
+     * @brief Push an element at the end of the container elements_,
+     * which is a vector.
+     *
+     * @param value The value to be pushed onto the stack.
+     */
     void push(const T& value) {
         elements_.push_back(value);
     }
 
-    // Push an element directly in case of not belong to a var
-    
+    /**
+     * @brief Push an element directly in case of not belong to a var.
+     *
+     * @param value The value to be pushed onto the stack (rvalue reference).
+     */
     void push(T&& value) {
         elements_.push_back(std::move(value));
     }
 
-    // Remove the top element from the stack
-    
+    /**
+     * @brief Remove the top element from the stack.
+     *
+     * Removes the last element.
+     *
+     * @throws std::out_of_range If the stack is empty.
+     */
     void pop() {
         if (elements_.empty()) {
             throw std::out_of_range("Stack is empty");
         }
-        // Removes last element 
         elements_.pop_back();
     }
 
-    // Access the top element of the stack
-
+    /**
+     * @brief Access the top element of the stack.
+     *
+     * @return A reference to the top element.
+     * @throws std::out_of_range If the stack is empty.
+     */
     T& top() {
         if (elements_.empty()) {
             throw std::out_of_range("Stack is empty");
@@ -60,8 +82,12 @@ public:
         return elements_.back();
     }
 
-    // Access the top element of the stack (const)
-
+    /**
+     * @brief Access the top element of the stack (const).
+     *
+     * @return A const reference to the top element.
+     * @throws std::out_of_range If the stack is empty.
+     */
     const T& top() const {
         if (elements_.empty()) {
             throw std::out_of_range("Stack is empty");
@@ -69,16 +95,20 @@ public:
         return elements_.back();
     }
 
-    // Check if the stack is empty
-
+    /**
+     * @brief Check if the stack is empty.
+     *
+     * @return `true` if the stack is empty, otherwise `false`.
+     */
     bool empty() const {
         return elements_.empty();
     }
 
 private:
-  // Container to store stack elements
-  
-    std::vector<T> elements_; 
+    /**
+     * @brief Container to store stack elements.
+     */
+    std::vector<T> elements_;
 };
 
 //

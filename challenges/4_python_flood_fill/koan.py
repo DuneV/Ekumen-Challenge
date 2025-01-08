@@ -58,17 +58,26 @@ class ConnectedRegionPainter:
 
     # aux function in case of changing the objective
     def star_color(self, x, y, target, new_color):
+        # ensure that is a valid pixel
         if not self.is_valid_pixel(x,y) or self.get_pixel(x,y) != target:
             return
+        # change the actual color of the pixel
         self.set_pixel(x, y, new_color)
+        # set directions of the movement of the algorithm
         directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+        # move on each direction
         for dx, dy in directions:
+            # please update the point I forgot it several times debbuging
             new_x, new_y = x, y
+            # in order to move over the direction create a loop
             while True: 
+                # make two accumulatives values
                 new_x += dx
                 new_y += dy
+                # break in case is outside the border
                 if not self.is_valid_pixel(new_x, new_y) or self.get_pixel(new_x, new_y) != target:
                     break
+                # recursive call to repetive the same function on the neigborhood 
                 self.star_color(new_x, new_y, target, new_color)
                 self.set_pixel(new_x, new_y, new_color)
 

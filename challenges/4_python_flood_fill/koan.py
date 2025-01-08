@@ -66,7 +66,7 @@ class ConnectedRegionPainter:
         '''
         if not self.is_valid_pixel(x, y):
             raise ValueError("Out of range")
-        self.image[x][y] = color
+        self.image[y][x] = color
 
     # method to get the image back
     def get_image(self):

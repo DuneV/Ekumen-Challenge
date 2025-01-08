@@ -15,12 +15,62 @@ import unittest
 
 
 class RLEEncoder:
-    def encode(self, data):
-        return ""
 
-    def decode(self, data):
-        return ""
+    def encode(self, data)->str:
+        '''
+        
+        parameters: (str) the initial string value (photo encrypted SHA-256 or others)
+        fun: count the quantity of values and represent the value
+        return: (str) the string enconde
+        
+        '''
+        try:
+            if not data:
+                return ""
+            # new value
+            encoded = []
+            # quantity of repetitions
+            counter = 1
+            
+            for i in range(1, len(data)):
+                if data[i] == data[i-1]: # it makes sure if the actual is equal to the previus
+                    counter += 1
+                else:
+                    # allocated the quantity and the value
+                    encoded.append(f"{counter}{data[i-1]}")
+                    # reset the counter
+                    counter = 1
+            
+            encoded.append(f"{counter}{data[-1]}")
+            
+            return "".join(encoded)
+        
+        except Exception as errno:
+            print("The fail was produced by: " + errno)
 
+    def decode(self, data)->str:
+        '''
+        parameters: (str) the final string decoded
+        fun: count the values of the characters and multiply them.
+        return: (str) the string decode
+        
+        '''
+        try:
+            if not data:
+                return ""
+            
+            decoded = []
+            counter = ""
+            
+            for char in data:
+                if char.isdigit(): # condition of evaluation
+                    counter += char
+                else:
+                    decoded.append(char * int(counter))
+                    counter = ""
+            return "".join(decoded)
+        except Exception as errno:
+            print("The fail was produced by: " + errno)
 
 # END EDIT --------------------------------------------------------
 

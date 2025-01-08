@@ -125,8 +125,16 @@ Implemented Dijkstra’s algorithm to find the shortest path between nodes in a 
   - Checked path reconstruction for nodes in loops or disconnected segments.
 - File: [`koan.cpp`](challenges/5_cpp_algorithmic_life/koan.cpp).
 
+### **3. Command Nomenclature**
+> [UPDATE] To update an actual feature developed, this in case to change some of the functionality of the code.
 
-#### **Testing**
+> [FIX] To fix some issue that appear on the testing of the product, this allow to know on the flow where and when it was produced.
+
+> [FEATURE] To include any of the task or and comments related in case to use doctrings or doxygen.
+
+> [FINAL] To give timestamp to the last commit.
+
+### **4. Global Testing**
 - Ran all the codes as a prove of behavior.
 
 ## Challenge 1

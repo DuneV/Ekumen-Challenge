@@ -18,11 +18,12 @@ class RLEEncoder:
 
     def encode(self, data)->str:
         '''
-        
-        parameters: (str) the initial string value (photo encrypted SHA-256 or others)
-        fun: count the quantity of values and represent the value
-        return: (str) the string enconde
-        
+        Parameters: 
+            data (str): the initial string value (photo encrypted SHA-256 or others)
+        Functionality: 
+            Count the quantity of values and represent the value
+        Returns: 
+            (str): the string enconde
         '''
         try:
             if not data:
@@ -50,10 +51,12 @@ class RLEEncoder:
 
     def decode(self, data)->str:
         '''
-        parameters: (str) the final string decoded
-        fun: count the values of the characters and multiply them.
-        return: (str) the string decode
-        
+        Parameters: 
+            data (str): the final string decoded
+        Functionality: 
+            Count the values of the characters and multiply them.
+        Returns: 
+            (str): the string decode
         '''
         try:
             if not data:

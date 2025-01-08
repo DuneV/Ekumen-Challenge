@@ -25,7 +25,7 @@
 #include <set>
 #include <unordered_map>
 #include <vector>
-
+#include <stdexcept>
 #include "gtest/gtest.h"
 
 /// BEGIN EDIT ------------------------------------------------------
@@ -33,65 +33,114 @@
 //
 // This block may or may not be necessary depending on your implementation.
 // Feel free to use it if you need it, or delete it if you don't.
+// I selected to do it on the shortesPathCalculator class
 //
 
 /// END EDIT --------------------------------------------------------
 
 class ShortestPathCalculator {
 public:
-  using id_type = std::size_t;
-  using cost_type = std::size_t;
+  using id_type = std::size_t;    // Alias for node/edge IDs.
+  using cost_type = std::size_t; // Alias for edge costs.
 
-  // Add a vertex to the graph. Return a unique id for the vertex.
+  // Adds a vertex and returns its unique ID.
   id_type add_vertex() {
-    auto id = make_id();
-    graph_.emplace(id, std::vector<ConnectionListItem>{});
+    auto id = make_id(); // Generate it
+    graph_.emplace(id, std::vector<ConnectionListItem>{}); // Create an entry on the adjacency matrix
     return id;
   }
 
-  // Add an edge_id between a pair of vertices with a edge_cost to go
-  // srd_node_id the first to the second. Return a unique id for the edge_id.
+  // Adds a directed edge with a cost and returns its unique ID.
+  // Throws if either vertex doesn't exist.
   id_type add_edge(id_type from, id_type to, cost_type edge_cost) {
-    if (graph_.find(from) == graph_.end()) {
-      throw std::runtime_error("invalid source vertex");
+    if (graph_.find(from) == graph_.end() || graph_.find(to) == graph_.end()) {
+      throw std::runtime_error("Invalid vertex"); // just in case
     }
-    if (graph_.find(to) == graph_.end()) {
-      throw std::runtime_error("invalid destination vertex");
-    }
+    // Gen id
+    
     auto edge_id = make_id();
+    
+    // Add the edge id
+
     graph_[from].emplace_back(ConnectionListItem{to, edge_id, edge_cost});
     return edge_id;
   }
 
-  // Calculate the shortest path between two vertices whose ids are given.
-  // Returns a tuple of two vectors, the first containing the sequence of nodes
-  // and the second containing the sequence of edges that make up the path.
-  // If no path is found between the two vertices, throw a std::runtime_error.
+  // Finds the shortest path from source to destination using Dijkstra's algorithm.
+  // I used this source: https://www.youtube.com/watch?v=bZkzH5x0SKU&ab_channel=FelixTechTips (great video)
+  // Returns a tuple of nodes and edges in the path to estimate the matrix
   auto shortest_path(id_type src_node_id, id_type dest_node_id) const {
-    std::vector<id_type> nodes;
-    std::vector<id_type> edges;
+    using PriorityQueueItem = std::pair<cost_type, id_type>; // Priority queue item: {cost, vertex ID}.
+    std::priority_queue<PriorityQueueItem, std::vector<PriorityQueueItem>, std::greater<>> pq;
+    
+    // Establish that the distance between the initial and the unknown is infinity
+    std::unordered_map<id_type, cost_type> distances;
+    std::unordered_map<id_type, id_type> predecessors, edge_used;
+    std::set<id_type> visited;
+    
+    // Set the source node distance as 0 and other still not visited as infinity 
+    for (const auto& [node_id, _] : graph_) distances[node_id] = std::numeric_limits<cost_type>::max();
+    distances[src_node_id] = 0;
+    pq.emplace(0, src_node_id);
+    
+    // Process the nodes 
+    while (!pq.empty()) {
+      // Get the node with the smallest distance from the priority queue 
+      auto [current_cost, current_node] = pq.top();
+      pq.pop();
+      // Skip visited
+      if (visited.count(current_node)) continue;
+      visited.insert(current_node);
+      // Break in case to fullfill
+      if (current_node == dest_node_id) break;
 
-    /// BEGIN EDIT ------------------------------------------------------
+      for (const auto& edge : graph_.at(current_node)) {
+        if (visited.count(edge.dst_vertex_id)) continue;
+        cost_type new_cost = current_cost + edge.edge_cost;
+        
+        // If this path is shorter, update the distance and save on the queue the destination node
+        if (new_cost < distances[edge.dst_vertex_id]) {
+          distances[edge.dst_vertex_id] = new_cost;
+          predecessors[edge.dst_vertex_id] = current_node;
+          edge_used[edge.dst_vertex_id] = edge.edge_id;
+          pq.emplace(new_cost, edge.dst_vertex_id);
+        }
+      }
+    }
+    // Exception in case of not connected nodes
+    
+    if (distances[dest_node_id] == std::numeric_limits<cost_type>::max()) {
+      throw std::runtime_error("No path found");
+    }
 
-    // Implement Dijkstra's algorithm here. You can use std::priority_queue.
+    // Trace back from the destination node to the source node
+    
+    std::vector<id_type> nodes, edges;
+    for (id_type current = dest_node_id; current != src_node_id; current = predecessors[current]) {
+      nodes.push_back(current);
+      edges.push_back(edge_used[current]);
+    }
+    nodes.push_back(src_node_id);
 
-    /// END EDIT --------------------------------------------------------
+    // Reverse the order of nodes and edges to start from the source
+    std::reverse(nodes.begin(), nodes.end());
+    std::reverse(edges.begin(), edges.end());
 
+    // return the nodes (ids) and weights
     return std::make_tuple(nodes, edges);
   }
 
 private:
   struct ConnectionListItem {
-    id_type dst_vertex_id;
-    id_type edge_id;
-    cost_type edge_cost;
+    id_type dst_vertex_id; // Destination vertex
+    id_type edge_id;       // Edge ID
+    cost_type edge_cost;   // Edge cost
   };
 
-  std::size_t id_{1}; // 0 can be used for "invalid id"
+  std::size_t id_{1}; // ID generator
+  std::unordered_map<id_type, std::vector<ConnectionListItem>> graph_; // Graph representation
 
-  std::unordered_map<id_type, std::vector<ConnectionListItem>> graph_;
-
-  // determine a unique id for a vertex
+  // Generates unique IDs.
   std::size_t make_id() { return id_++; }
 };
 

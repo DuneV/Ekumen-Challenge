@@ -17,6 +17,16 @@ class ConnectedRegionPainter:
 
     # constructor to create image from a list of lists, a width and a height
     def __init__(self, image, width, height):
+        '''
+        Parameters:
+            image (list of lists): A 2D array representing the image 
+            width (int): The width of the image
+            height (int): The height of the image
+        Functionality:
+            Initializes the ConnectedRegionPainter object, validates that the dimensions of the image match the given width and height
+        Returns:
+            None
+        '''
         self.image = image
         self.width = width
         self.height = height
@@ -29,37 +39,96 @@ class ConnectedRegionPainter:
 
     # method to get the color of a pixel
     def get_pixel(self, x, y):
-        if not self.is_valid_pixel(x,y):
+        '''
+        Parameters:
+            x (int): The x-coordinate
+            y (int): The y-coordinate
+        Functionality:
+            Retrieves the color of the pixel at the specified coordinates
+        Returns:
+            int: The color value of the pixel
+        '''
+        if not self.is_valid_pixel(x, y):
             raise ValueError("Out of range")
         return self.image[y][x]
 
     # method to set the color of a pixel
     def set_pixel(self, x, y, color):
-        if not self.is_valid_pixel(x,y):
+        '''
+        Parameters:
+            x (int): The x-coordinate
+            y (int): The y-coordinate
+            color (int): The new color to set for the pixel
+        Functionality:
+            Updates the color of the pixel at the specified coordinates
+        Returns:
+            None
+        '''
+        if not self.is_valid_pixel(x, y):
             raise ValueError("Out of range")
-        self.image[y][x] = color
+        self.image[x][y] = color
 
     # method to get the image back
     def get_image(self):
+        '''
+        Parameters:
+            None
+        Functionality:
+            Retrieves the current state of the image
+        Returns:
+            list of lists: The 2D array representing the image
+        '''
         return self.image
 
     # method to determine if the pixels are within the image
     def is_valid_pixel(self, x, y):
+        '''
+        Parameters:
+            x (int): The x-coordinate
+            y (int): The y-coordinate
+        Functionality:
+            Checks if the given coordinates are within the bounds of the image
+        Returns:
+            bool: True if the pixel is valid, False otherwise.
+        '''
         return 0 <= x < self.width and 0 <= y < self.height
 
     # method to flood fill a region with a new color star mode
     def flood_fill(self, x, y, new_color):
+        '''
+        Parameters:
+            x (int): The starting x-coordinate
+            y (int): The starting y-coordinate
+            new_color (int): The new color to apply to the region
+        Functionality:
+            Fills the region connected to the starting pixel with the new color
+        Returns:
+            None
+        '''
         if not self.is_valid_pixel(x, y):
             raise ValueError("Out of range")
-        target = self.get_pixel(x,y)
+        target = self.get_pixel(x, y)
         if target == new_color:
             return
         self.star_color(x, y, target, new_color)
 
     # aux function in case of changing the objective
     def star_color(self, x, y, target, new_color):
+        '''
+        Parameters:
+            x (int): The current x-coordinate
+            y (int): The current y-coordinate
+            target (int): The original color of the region to fill
+            new_color (int): The new color to apply
+        Functionality:
+            Recursively (this can be change by stack on my 
+            research exist many algorithms to do that in 
+            case of big images) fills the connected pixels in the region with the new color
+        Returns:
+            None
+        '''
         # ensure that is a valid pixel
-        if not self.is_valid_pixel(x,y) or self.get_pixel(x,y) != target:
+        if not self.is_valid_pixel(x, y) or self.get_pixel(x, y) != target:
             return
         # change the actual color of the pixel
         self.set_pixel(x, y, new_color)
@@ -67,17 +136,17 @@ class ConnectedRegionPainter:
         directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
         # move on each direction
         for dx, dy in directions:
-            # please update the point I forgot it several times debbuging
+            # please update the point I forgot it several times debugging
             new_x, new_y = x, y
             # in order to move over the direction create a loop
-            while True: 
-                # make two accumulatives values
+            while True:
+                # make two accumulative values
                 new_x += dx
                 new_y += dy
                 # break in case is outside the border
                 if not self.is_valid_pixel(new_x, new_y) or self.get_pixel(new_x, new_y) != target:
                     break
-                # recursive call to repetive the same function on the neigborhood 
+                # recursive call to repeat the same function on the neighborhood
                 self.star_color(new_x, new_y, target, new_color)
                 self.set_pixel(new_x, new_y, new_color)
 

@@ -37,7 +37,14 @@ TEST(NoLambdasAllowed, SimplestLambda) {
   /// BEGIN EDIT ------------------------------------------------------
 
   // create a class that implements:
-  // auto f = [n] { return n; };
+  class F {
+  public:
+    explicit F(int value) : n_(value) {}
+    int operator()() const { return n_; }
+  
+  private:
+    int n_;
+  };
 
   /// END EDIT --------------------------------------------------------
 
@@ -55,6 +62,20 @@ TEST(NoLambdasAllowed, CountingLambda) {
   /// BEGIN EDIT ------------------------------------------------------
 
   // create a class that implements:
+  class F {
+  public:
+    F(int initial, int step) : n_(initial), s_(step) {}
+
+    int operator()() {
+      const auto ret = n_;
+      n_ += s_;
+      return ret;
+    }
+
+  private:
+    int n_;
+    int s_;
+  };
   // auto f = [n, s]() mutable {
   //   const auto ret = n;
   //   n += s;
@@ -81,6 +102,16 @@ TEST(NoLambdasAllowed, ParameterizedLambda) {
   /// BEGIN EDIT ------------------------------------------------------
 
   // create a class that implements:
+  class F {
+  public:
+    F(double slope, double intercept) : m_(slope), b_(intercept) {}
+
+    double operator()(double x) const { return m_ * x + b_; }
+
+  private:
+    double m_;
+    double b_;
+  };
   // auto f = [m, b](double x) { return m * x + b; };
 
   /// END EDIT --------------------------------------------------------
@@ -103,6 +134,16 @@ TEST(NoLambdasAllowed, CaptureByReferenceLambda) {
   /// BEGIN EDIT ------------------------------------------------------
 
   // create a class that implements:
+  class F {
+  public:
+    F(double& slope, double& intercept) : m_(slope), b_(intercept) {}
+
+    double operator()(double x) const { return m_ * x + b_; }
+
+  private:
+    double& m_;
+    double& b_;
+  };
   // auto f = [&m, &b](double x) { return m * x + b; };
 
   /// END EDIT --------------------------------------------------------
@@ -139,6 +180,15 @@ TEST(NoLambdasAllowed, MoveOnlyCaptures) {
   /// BEGIN EDIT ------------------------------------------------------
 
   // create a class that implements:
+  class F {
+  public:
+    explicit F(std::unique_ptr<Driver> d) : driver_(std::move(d)) {}
+
+    std::string operator()() const { return driver_->name(); }
+
+  private:
+    std::unique_ptr<Driver> driver_;
+  };
   // auto f = [d = std::move(driver)]() { return d->name(); };
 
   /// END EDIT --------------------------------------------------------

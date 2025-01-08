@@ -130,7 +130,31 @@ Implemented Dijkstra’s algorithm to find the shortest path between nodes in a 
 - Ran all the codes as a prove of behavior.
 
 ## Challenge 1
+<center><img src="assets/test1.png" alt="drawing", width="500px"/>
+</center>  
+
+- Test of the code challenge 1.
+
 ## Challenge 2
+<center><img src="assets/test2.png" alt="drawing", width="500px"/>
+</center>  
+
+- Test of the code challenge 2.
+
 ## Challenge 3
+<center><img src="assets/test3.png" alt="drawing", width="500px"/>
+</center>  
+
+- Test of the code challenge 3.
+
 ## Challenge 4
+<center><img src="assets/test4.png" alt="drawing", width="500px"/>
+</center>  
+
+- Test of the code challenge 4.
+
 ## Challenge 5
+<center><img src="assets/test5.png" alt="drawing", width="500px"/>
+</center>  
+
+- Test of the code challenge 5.

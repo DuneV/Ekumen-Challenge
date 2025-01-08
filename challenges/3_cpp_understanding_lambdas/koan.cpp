@@ -20,15 +20,24 @@
 TEST(NoLambdasAllowed, Example) {
   // Example:
   // To create a class that implements:
-  // auto f = []{ return 5; };
 
   class F {
   public:
+    // Default constructor
     F() = default;
+
+    // Callable operator that always returns 5
     int operator()() const { return 5; }
   };
+
+  /*
+    INITIAL DESCRIPTION
+  */
+  // auto f = []{ return 5; };
+  
   const auto f = F{};
 
+  // Assert that the callable object returns the expected value
   ASSERT_EQ(5, f());
 }
 
@@ -39,11 +48,14 @@ TEST(NoLambdasAllowed, SimplestLambda) {
   // create a class that implements:
   class F {
   public:
+    // Constructor to initialize the captured value
     explicit F(int value) : n_(value) {}
+
+    // Callable operator that returns the captured value
     int operator()() const { return n_; }
-  
+
   private:
-    int n_;
+    int n_; // Captured value
   };
 
   /// END EDIT --------------------------------------------------------
@@ -64,8 +76,10 @@ TEST(NoLambdasAllowed, CountingLambda) {
   // create a class that implements:
   class F {
   public:
+    // Constructor to initialize the captured values
     F(int initial, int step) : n_(initial), s_(step) {}
 
+    // Callable operator that updates and returns the current value
     int operator()() {
       const auto ret = n_;
       n_ += s_;
@@ -73,9 +87,14 @@ TEST(NoLambdasAllowed, CountingLambda) {
     }
 
   private:
-    int n_;
-    int s_;
+    int n_; // Mutable captured value
+    int s_; // Step size
   };
+  
+  /*
+    INITIAL DESCRIPTION
+  */
+
   // auto f = [n, s]() mutable {
   //   const auto ret = n;
   //   n += s;
@@ -104,14 +123,21 @@ TEST(NoLambdasAllowed, ParameterizedLambda) {
   // create a class that implements:
   class F {
   public:
+    // Constructor to initialize the captured values
     F(double slope, double intercept) : m_(slope), b_(intercept) {}
 
+    // Callable operator that computes the linear equation
     double operator()(double x) const { return m_ * x + b_; }
 
   private:
-    double m_;
-    double b_;
+    double m_; // Slope
+    double b_; // Intercept
   };
+
+  /*
+    INITIAL DESCRIPTION
+  */
+
   // auto f = [m, b](double x) { return m * x + b; };
 
   /// END EDIT --------------------------------------------------------
@@ -136,16 +162,23 @@ TEST(NoLambdasAllowed, CaptureByReferenceLambda) {
   // create a class that implements:
   class F {
   public:
+    // Constructor to initialize the references to the captured values
     F(double& slope, double& intercept) : m_(slope), b_(intercept) {}
 
+    // Callable operator that computes the linear equation
     double operator()(double x) const { return m_ * x + b_; }
 
   private:
-    double& m_;
-    double& b_;
+    double& m_; // Reference to slope
+    double& b_; // Reference to intercept
   };
-  // auto f = [&m, &b](double x) { return m * x + b; };
+ 
+  /*
+    INITIAL DESCRIPTION
+  */
 
+  // auto f = [&m, &b](double x) { return m * x + b; };
+ 
   /// END EDIT --------------------------------------------------------
 
   const auto f = F{
@@ -182,13 +215,20 @@ TEST(NoLambdasAllowed, MoveOnlyCaptures) {
   // create a class that implements:
   class F {
   public:
+    // Constructor to initialize the unique_ptr by moving it
     explicit F(std::unique_ptr<Driver> d) : driver_(std::move(d)) {}
 
+    // Callable operator that accesses the Driver's name method
     std::string operator()() const { return driver_->name(); }
 
   private:
-    std::unique_ptr<Driver> driver_;
+    std::unique_ptr<Driver> driver_; // Unique pointer to the Driver
   };
+
+  /*
+    INITIAL DESCRIPTION
+  */
+  
   // auto f = [d = std::move(driver)]() { return d->name(); };
 
   /// END EDIT --------------------------------------------------------
